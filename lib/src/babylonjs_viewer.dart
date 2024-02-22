@@ -14,11 +14,13 @@ class BabylonJSViewer extends StatefulWidget {
   BabylonJSViewer({
     Key? key,
     required this.src,
+    this.template,
     this.controller,
     this.functions,
   }) : super(key: key);
 
   final String src;
+  final String? template;
   final ValueChanged<WebViewController>? controller;
   final String? functions;
 
@@ -73,7 +75,7 @@ class _BabylonJSViewerState extends State<BabylonJSViewer> {
           }
         },
         onWebResourceError: (error) {
-          print('>>>> ModelViewer failed to load: ${error}'); // DEBUB
+          print('>>>> ModelViewer failed to load: $error'); // DEBUB
         },
         onPageStarted: (url) {
           print('>>>> BabylonJS Viewer loading url... <$url>'); // DEBUG
@@ -102,7 +104,7 @@ class _BabylonJSViewerState extends State<BabylonJSViewer> {
       switch (request.uri.path) {
         case '/':
         case '/index.html':
-          final htmlTemplate = await rootBundle.loadString(
+          final htmlTemplate = widget.template ?? await rootBundle.loadString(
               'packages/babylonjs_viewer/assets/viewer/template.html');
           final html = utf8.encode(_buildHTML(htmlTemplate));
           response
